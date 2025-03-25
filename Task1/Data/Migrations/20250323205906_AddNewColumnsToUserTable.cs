@@ -48,6 +48,15 @@ namespace Task1.Data.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.AddColumn<string>(
+                name: "AccountStatus",
+                schema: "Task1",
+                table: "Users",
+                type: "nvarchar(100)",
+                maxLength: 100,
+                nullable: false,
+                defaultValue: "");
+
             migrationBuilder.AlterColumn<string>(
                 name: "ProviderKey",
                 schema: "Task1",

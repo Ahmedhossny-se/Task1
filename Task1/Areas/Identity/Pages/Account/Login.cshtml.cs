@@ -102,7 +102,7 @@ namespace Task1.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
         }
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         //Constructor name should be the same as the class
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -110,7 +110,7 @@ namespace Task1.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            //var username = new EmailAddressAttribute().IsValid(Input.Email) ? userManager.FindByEmailAsync(Input.Email).Result.UserName : Input.Email;
+            //var username = new EmailAddressAttribute().IsValid(Input.Email) ? _userManager.FindByEmailAsync(Input.Email).Result.UserName : Input.Email;
 
             if (ModelState.IsValid)
             {
