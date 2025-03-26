@@ -4,8 +4,10 @@
 }
 
 <h1>Users</h1>
-
-<a asp-action="Add" class="btn btn-primary">Add New User</a>
+@if (User.IsInRole("SystemAdministrator"))
+{
+    <a asp-action="Add" class="btn btn-primary">Add New User</a>
+}
 <table class="table table-striped mt-4">
     <thead>
         <tr class="bg-primary text-white">
@@ -29,9 +31,56 @@
                 <td>@String.Join(" , ",user.UserRole.ToList())</td>
                 <td>@user.AccountStatus</td>
                 <td>
-                    <a class="btn btn-primary" asp-controller="Users" asp-action="ManageRoles" asp-route-userid="@user.Id">Manage Roles</a>
+                    @if (User.IsInRole("SystemAdministrator"))
+                    {
+                        <a class="btn btn-primary" asp-controller="Users" asp-action="ManageRoles" asp-route-userid="@user.Id">Roles</a>
+                    }
+                    <a class="btn btn-outline-primary" asp-controller="Users" asp-action="Edit" asp-route-userid="@user.Id">User</a>
+                    @if (User.IsInRole("SystemAdministrator"))
+                    {
+                    <a href="javascript:;" class="btn btn-danger js-delete" data-id="@user.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.js-delete').on('click', function () {
+                var btn = $(this);
+
+                bootbox.confirm({
+                    message: "Are You Sure?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-success'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.ajax({
+                                url: '/api/users/?userId=' + btn.data('id'),
+                                method: 'DELETE',
+                                success: function () {
+                                    btn.parents('tr').fadeOut();
+                                    alert('User Deleted');
+                                },
+                                error: function() {
+                                    alert('Something Went Wrong');
+                                }
+                            });
+                        }
+                    }
+                });           
+            });
+        });  
+    </script>
+}
